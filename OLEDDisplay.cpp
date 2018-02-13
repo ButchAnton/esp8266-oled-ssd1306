@@ -47,6 +47,7 @@ bool OLEDDisplay::init() {
   }
   #endif
 
+  toggleResetPin();
   sendInitCommands();
   resetDisplay();
 
@@ -690,6 +691,28 @@ void OLEDDisplay::sendInitCommands(void) {
   sendCommand(NORMALDISPLAY);
   sendCommand(0x2e);            // stop scroll
   sendCommand(DISPLAYON);
+}
+
+// Reset the display by toggling the reset pin.
+// This seems to only be necessary for the
+// Heltec WiFi Kit 32 board.  Hopefully it doesn't
+// screw up other boards.
+
+void OLEDDisplay::toggleResetPin(void) {
+
+  int resetPin = 16;  // reset pin
+
+  // Setup reset pin direction (used by both SPI and I2C)
+  pinMode(resetPin, OUTPUT);
+  digitalWrite(resetPin, HIGH);
+  // VDD (3.3V) goes high at start, lets just chill for a ms
+  delay(1);
+  // bring reset low
+  digitalWrite(resetPin, LOW);
+  // wait 10ms
+  delay(10);
+  // bring out of reset
+  digitalWrite(resetPin, HIGH);
 }
 
 void inline OLEDDisplay::drawInternal(int16_t xMove, int16_t yMove, int16_t width, int16_t height, const char *data, uint16_t offset, uint16_t bytesInData) {

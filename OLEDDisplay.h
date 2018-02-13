@@ -150,7 +150,7 @@ class OLEDDisplay : public Print {
     // Draw a lin vertically
     void drawVerticalLine(int16_t x, int16_t y, int16_t length);
 
-    // Draws a rounded progress bar with the outer dimensions given by width and height. Progress is 
+    // Draws a rounded progress bar with the outer dimensions given by width and height. Progress is
     // a unsigned byte value between 0 and 100
     void drawProgressBar(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint8_t progress);
 
@@ -251,6 +251,10 @@ class OLEDDisplay : public Print {
 
     // Connect to the display
     virtual bool connect() {};
+
+    // Reset the dipslay via the reset pin.
+    // This seems to only be necessary for the Heltec WiFi Kit 32.
+    void toggleResetPin();
 
     // Send all the init commands
     void sendInitCommands();
